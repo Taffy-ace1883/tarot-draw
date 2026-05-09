@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>塔罗抽卡工具 - 完整版</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', 'Noto Sans TC', sans-serif;
+            background: linear-gradient(145deg, #0b0c1a 0%, #12152f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .tarot-container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(10, 14, 23, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 64px;
+            padding: 24px 20px 32px;
+            border: 1px solid rgba(255, 215, 150, 0.3);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.3rem;
+            margin: 0 0 8px 0;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #f9e0a0, #d4af37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sub {
+            text-align: center;
+            color: #b9c7d9;
+            margin-bottom: 24px;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .draw-btn {
+            background: #f3c950;
+            border: none;
+            width: 80%;
+            display: block;
+            margin: 10px auto 20px;
+            font-size: 2rem;
+            padding: 14px 0;
+            border-radius: 80px;
+            font-weight: bold;
+            color: #1a1f2e;
+            cursor: pointer;
+            box-shadow: 0 7px 0 #a47c1a;
+            transition: 0.08s linear;
+            letter-spacing: 6px;
+        }
+
+        .draw-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 3px 0 #a47c1a;
+        }
+
+        .card-panel {
+            background: #fef7e8;
+            border-radius: 48px;
+            padding: 20px 18px;
+            text-align: center;
+            color: #1e1a2f;
+            margin: 10px 0 20px;
+            box-shadow: inset 0 0 0 1px rgba(255, 245, 215, 0.8), 0 12px 18px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-name {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 5px 0 0;
+            letter-spacing: 2px;
+            color: #4b2a1a;
+        }
+
+        .orientation {
+            display: inline-block;
+            background: #ead5b2;
+            padding: 6px 22px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin: 12px 0;
+            font-size: 1.1rem;
+        }
+
+        .meaning {
+            font-size: 1.15rem;
+            line-height: 1.45;
+            background: #fff3e0;
+            padding: 16px;
+            border-radius: 36px;
+            text-align: left;
+            margin-top: 12px;
+        }
+
+        .history-area {
+            background: #1a1e2fcc;
+            border-radius: 40px;
+            padding: 12px 16px;
+            margin-top: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        .history-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 0 0 8px 0;
+            padding-left: 8px;
+            color: #f7e5c2;
+        }
+
+        .history-list {
+            max-height: 180px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            background: #2f2b44aa;
+            padding: 8px 14px;
+            border-radius: 60px;
+            color: #f0e9cf;
+            backdrop-filter: blur(2px);
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 20px;
+            color: #aaa9ce;
+        }
+
+        button {
+            background-color: #f3c950;
+        }
+
+        @media (max-width: 500px) {
+            .tarot-container {
+                padding: 16px;
+            }
+            .card-name {
+                font-size: 1.8rem;
+            }
+            .draw-btn {
+                font-size: 1.6rem;
+                letter-spacing: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="tarot-container">
+    <h1>✨ 心灵塔罗 ✨</h1>
+    <div class="sub">静心 · 直觉 · 随机之牌</div>
+
+    <button class="draw-btn" id="drawBtn">🔮 抽一张牌 🔮</button>
+
+    <!-- 抽牌结果显示区域 -->
+    <div id="resultArea"></div>
+
+    <!-- 历史记录 -->
+    <div class="history-area">
+        <div class="history-title">📜 抽牌记录</div>
+        <div class="history-list" id="historyList">
+            <div style="text-align:center; opacity:0.7;">点击上方按钮，开始占卜</div>
+        </div>
+    </div>
+    <footer>正位 🌟 · 逆位 ⚡ ｜ 每抽随机正逆</footer>
+</div>
+
+<script>
+    // ----------------------------- 塔罗牌数据（可直接扩充到78张）--------------------------------
+    const tarots = [
+        { name: "愚者", meaningUp: "新的旅程，自由，天真，冒险即将开始。", meaningDown: "鲁莽，逃避责任，漫无目的，轻率行事。" },
+        { name: "魔术师", meaningUp: "创造力，技能，专注，资源充足。", meaningDown: "欺骗，无能，犹豫不决，浪费才华。" },
+        { name: "女祭司", meaningUp: "直觉，神秘，内在智慧，静默。", meaningDown: "压抑直觉，肤浅，隐藏的秘密，焦虑。" },
+        { name: "皇后", meaningUp: "丰盛，母性，美丽，自然。", meaningDown: "依赖，缺乏成长，窒息的爱，懒惰。" },
+        { name: "皇帝", meaningUp: "权威，稳定，领导力，结构。", meaningDown: "专制，缺乏纪律，控制欲强，固执。" },
+        { name: "恋人", meaningUp: "爱情，和谐，选择，价值观。", meaningDown: "失衡，冲突，分离，错误决定。" },
+        { name: "战车", meaningUp: "意志力，胜利，决心，自控。", meaningDown: "失控，攻击性，失败，缺乏方向。" },
+        { name: "力量", meaningUp: "勇气，耐心，同情，韧性。", meaningDown: "软弱，怀疑，冲动，滥用力量。" }
+    ];
+
+    // 历史记录数组
+    let historyArray = [];
+
+    // 获取页面元素
+    const drawBtn = document.getElementById('drawBtn');
+    const resultArea = document.getElementById('resultArea');
+    const historyListEl = document.getElementById('historyList');
+
+    // 抽牌核心逻辑
+    function drawRandomCard() {
+        // 随机选一张牌
+        const randomIndex = Math.floor(Math.random() * tarots.length);
+        const card = tarots[randomIndex];
+        // 随机正逆位 (true=逆位 false=正位)
+        const isReversed = Math.random() < 0.5;
+        const orientation = isReversed ? "逆位 ⚡" : "正位 🌟";
+        const meaning = isReversed ? card.meaningDown : card.meaningUp;
+        
+        return {
+            name: card.name,
+            orientation: orientation,
+            meaning: meaning,
+        };
+    }
+
+    // 显示本次抽牌结果
+    function displayResult(result) {
+        resultArea.innerHTML = `
+            <div class="card-panel">
+                <div class="card-name">📌 ${result.name}</div>
+                <div class="orientation">${result.orientation}</div>
+                <div class="meaning">💬 ${result.meaning}</div>
+            </div>
+        `;
+    }
+
+    // 更新历史记录UI
+    function updateHistoryUI() {
+        if (historyArray.length === 0) {
+            historyListEl.innerHTML = '<div style="text-align:center; opacity:0.7;">✨ 暂无记录，点击上方抽牌 ✨</div>';
+            return;
+        }
+
+        let historyHtml = '';
+        // 只显示最近8条，最新的在上面
+        for (let i = 0; i < historyArray.length; i++) {
+            const h = historyArray[i];
+            historyHtml += `
+                <div class="history-item">
+                    🃏 ${h.name} · ${h.orientation} · ${h.meaning.substring(0, 38)}${h.meaning.length > 38 ? '…' : ''}
+                </div>
+            `;
+        }
+        historyListEl.innerHTML = historyHtml;
+    }
+
+    // 将抽牌结果加入历史
+    function addToHistory(result) {
+        historyArray.unshift(result);   // 最新记录放在最前
+        if (historyArray.length > 10) historyArray.pop(); // 最多10条
+        updateHistoryUI();
+    }
+
+    // 点击抽牌完整流程
+    function onDrawClick() {
+        const result = drawRandomCard();
+        displayResult(result);
+        addToHistory(result);
+    }
+
+    // 绑定按钮事件
+    drawBtn.addEventListener('click', onDrawClick);
+
+    // （可选）页面加载时显示一张默认牌，但不是必须的，可以保留空白，但为了体验显示一个引导信息
+    if (resultArea) {
+        resultArea.innerHTML = `
+            <div class="card-panel" style="background: #efe2ce; opacity:0.9;">
+                <div class="card-name">🔮 静心默念</div>
+                <div class="orientation">点击抽牌</div>
+                <div class="meaning">凝神片刻，让心指引你的选择</div>
+            </div>
+        `;
+    }
+</script>
+</body>
+</html>
