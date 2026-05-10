@@ -2,13 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>塔罗占卜 - 专业牌阵版</title>
+    <title>塔罗占卜 - 专业牌阵版（无重复抽取）</title>
     <style>
-        /* 整体样式 - 深色神秘风格 */
-        * {
-            box-sizing: border-box;
-            user-select: none;
-        }
+        * { box-sizing: border-box; user-select: none; }
         body {
             font-family: system-ui, 'Segoe UI', 'Noto Sans TC', sans-serif;
             background: linear-gradient(145deg, #0b0c1a 0%, #12152f 100%);
@@ -25,15 +21,14 @@
             background: rgba(10, 14, 23, 0.7);
             backdrop-filter: blur(12px);
             border-radius: 64px;
-            padding: 24px 24px 32px;
+            padding: 24px;
             border: 1px solid rgba(255, 215, 150, 0.3);
             box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
-            transition: all 0.2s ease;
         }
         h1 {
             text-align: center;
             font-size: 2.3rem;
-            margin: 0 0 8px 0;
+            margin: 0 0 8px;
             background: linear-gradient(135deg, #f9e0a0, #d4af37);
             -webkit-background-clip: text;
             background-clip: text;
@@ -43,9 +38,7 @@
             text-align: center;
             color: #b9c7d9;
             margin-bottom: 24px;
-            font-size: 0.85rem;
         }
-        /* 牌阵选择器样式 */
         .spread-selector {
             display: flex;
             justify-content: center;
@@ -83,11 +76,7 @@
             box-shadow: 0 7px 0 #a47c1a;
             transition: 0.08s linear;
         }
-        .draw-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 3px 0 #a47c1a;
-        }
-        /* 牌阵结果展示 - 网格布局 */
+        .draw-btn:active { transform: translateY(4px); box-shadow: 0 3px 0 #a47c1a; }
         .spread-result {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -103,9 +92,7 @@
             box-shadow: inset 0 0 0 1px rgba(255, 245, 215, 0.8), 0 8px 18px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s;
         }
-        .card-result:hover {
-            transform: translateY(-5px);
-        }
+        .card-result:hover { transform: translateY(-5px); }
         .position-name {
             font-size: 1.2rem;
             font-weight: bold;
@@ -115,12 +102,7 @@
             margin-bottom: 12px;
             padding: 0 10px;
         }
-        .card-name {
-            font-size: 1.6rem;
-            font-weight: 800;
-            margin: 8px 0;
-            color: #4b2a1a;
-        }
+        .card-name { font-size: 1.6rem; font-weight: 800; margin: 8px 0; color: #4b2a1a; }
         .orientation {
             display: inline-block;
             background: #ead5b2;
@@ -128,7 +110,6 @@
             border-radius: 40px;
             font-weight: bold;
             margin: 8px 0;
-            font-size: 0.9rem;
         }
         .meaning {
             font-size: 0.9rem;
@@ -149,12 +130,7 @@
             color: white;
             cursor: pointer;
         }
-        footer {
-            font-size: 0.7rem;
-            text-align: center;
-            margin-top: 20px;
-            color: #aaa9ce;
-        }
+        footer { font-size: 0.7rem; text-align: center; margin-top: 20px; color: #aaa9ce; }
         @media (max-width: 700px) {
             .spread-result { grid-template-columns: 1fr; }
             .draw-btn { width: 90%; font-size: 1.5rem; }
@@ -164,165 +140,205 @@
 <body>
 <div class="tarot-container">
     <h1>✨ 心灵塔罗 ✨</h1>
-    <div class="sub">选择牌阵 · 让指引更清晰</div>
-
-    <!-- 牌阵选择区域 -->
+    <div class="sub">选择牌阵 · 无重复专业占卜</div>
     <div class="spread-selector" id="spreadSelector">
         <div class="spread-btn" data-spread="single">🔮 单张牌</div>
         <div class="spread-btn" data-spread="three">📜 三张牌（时间之箭）</div>
         <div class="spread-btn" data-spread="celtic">⚜️ 凯尔特十字</div>
     </div>
-
     <button class="draw-btn" id="drawBtn">✨ 开始占卜 ✨</button>
-    
-    <!-- 结果展示区域 -->
     <div id="resultArea"></div>
-    
-    <button class="reset-btn" id="resetBtn">清空记录 / 重新开始</button>
-    <footer>正位 🌟 · 逆位 ⚡ ｜ 每张牌随机正逆位</footer>
+    <button class="reset-btn" id="resetBtn">清空 / 重新开始</button>
+    <footer>正位 🌟 · 逆位 ⚡ ｜ 每次牌阵内牌不重复（如凯尔特十字10张均不同）</footer>
 </div>
 
 <script>
-    // ---------- 🌟 完整78张塔罗牌数据（与之前一致）----------
-    const tarots = [
-        // 大阿卡纳 22张 (内容过长，此处省略确保格式，实际请复制上一轮提供的完整78张数据)
-        // 注意：为了代码完整性，你需要将上一轮回答中的完整 `tarots` 数组粘贴到此处。
-        // 由于篇幅，这里仅做结构示例，请务必替换为完整的78张数据。
-        { name: "愚者", meaningUp: "新的开始、冒险、自由", meaningDown: "鲁莽、轻率、愚蠢" },
-        { name: "魔术师", meaningUp: "创造力、技巧、自信", meaningDown: "欺骗、无能、犹豫" }
-        // ... 此处省略其他76张牌，实际使用请务必补全 ...
-    ];
+// ---------- 完整78张塔罗牌数据（此处精简展示，实际使用时请替换为完整数据）----------
+// ---------- 塔罗牌数据（完整78张）----------
+const tarots = [
+    // ========== 大阿卡纳 22张 ==========
+    { name: "愚者", meaningUp: "新的开始、冒险、自由、天真、自发性", meaningDown: "鲁莽、轻率、愚蠢、逃避、漫无目的" },
+    { name: "魔术师", meaningUp: "创造力、技巧、自信、资源、意志力", meaningDown: "欺骗、无能、犹豫、操纵、浪费才华" },
+    { name: "女祭司", meaningUp: "直觉、神秘、内在智慧、静默、潜意识", meaningDown: "压抑、肤浅、焦虑、秘密揭露、冷淡" },
+    { name: "皇后", meaningUp: "丰盛、母性、美丽、自然、感官享受", meaningDown: "依赖、缺乏成长、窒息、懒惰、空虚" },
+    { name: "皇帝", meaningUp: "权威、稳定、领导力、结构、秩序", meaningDown: "专制、固执、缺乏纪律、控制欲强" },
+    { name: "教皇", meaningUp: "传统、信仰、教育、指引、精神导师", meaningDown: "教条、盲从、误导、僵化、形式主义" },
+    { name: "恋人", meaningUp: "爱情、和谐、选择、价值观、结合", meaningDown: "失衡、冲突、分离、诱惑、错误决定" },
+    { name: "战车", meaningUp: "意志力、胜利、决心、自控、征服", meaningDown: "失控、攻击性、失败、缺乏方向、软弱" },
+    { name: "力量", meaningUp: "勇气、耐心、同情、韧性、说服力", meaningDown: "软弱、怀疑、冲动、滥用力量、恐惧" },
+    { name: "隐士", meaningUp: "内省、指引、孤独、智慧、寻求真理", meaningDown: "孤独、偏执、逃避、封闭、拒绝帮助" },
+    { name: "命运之轮", meaningUp: "转变、运气、命运、周期、转折点", meaningDown: "厄运、阻力、失控、意外、无法预测" },
+    { name: "正义", meaningUp: "公正、真相、因果、平衡、诚实", meaningDown: "不公、偏见、欺骗、逃避责任、失衡" },
+    { name: "倒吊人", meaningUp: "牺牲、换个角度、等待、放下、顺从", meaningDown: "抗拒、固执、无谓牺牲、停滞、焦虑" },
+    { name: "死神", meaningUp: "结束、转变、放手、新生、蜕变", meaningDown: "抗拒改变、停滞、恐惧、无法放手" },
+    { name: "节制", meaningUp: "平衡、调和、耐心、适度、净化", meaningDown: "失衡、冲突、急躁、失控、不协调" },
+    { name: "恶魔", meaningUp: "束缚、物质、欲望、执念、上瘾", meaningDown: "解脱、觉醒、摆脱束缚、重获自由" },
+    { name: "高塔", meaningUp: "剧变、崩溃、觉醒、意外、启示", meaningDown: "避免灾难、恐惧改变、延缓、勉强维持" },
+    { name: "星星", meaningUp: "希望、疗愈、灵感、平静、乐观", meaningDown: "绝望、失望、缺乏灵感、消极、悲观" },
+    { name: "月亮", meaningUp: "直觉、幻觉、不安、潜意识、梦境", meaningDown: "恐惧揭露、混乱、欺骗、自我欺骗" },
+    { name: "太阳", meaningUp: "快乐、成功、活力、积极、光明", meaningDown: "悲伤、挫折、延迟、消极、过度乐观" },
+    { name: "审判", meaningUp: "重生、觉醒、召唤、宽恕、升华", meaningDown: "自我怀疑、拒绝召唤、拖延、恐惧改变" },
+    { name: "世界", meaningUp: "完成、圆满、成就、旅行、整合", meaningDown: "未完成、缺乏闭合、延迟、空虚" },
 
-    // ---------- 🎯 牌阵配置 ----------
-    const spreads = {
-        single: {
-            name: "单张牌",
-            positions: [{ id: 0, name: "今日指引 / 核心提示" }]
-        },
-        three: {
-            name: "三张牌（时间之箭）",
-            positions: [
-                { id: 0, name: "过去 · 根源" },
-                { id: 1, name: "现在 · 当下" },
-                { id: 2, name: "未来 · 发展" }
-            ]
-        },
-        celtic: {
-            name: "凯尔特十字",
-            positions: [
-                { id: 0, name: "1. 现状 · 核心问题" },
-                { id: 1, name: "2. 阻碍 · 挑战" },
-                { id: 2, name: "3. 潜意识 · 根基" },
-                { id: 3, name: "4. 过去 · 近期经历" },
-                { id: 4, name: "5. 可能的结果" },
-                { id: 5, name: "6. 未来 · 短期发展" },
-                { id: 6, name: "7. 态度 · 自我定位" },
-                { id: 7, name: "8. 环境 · 他人影响" },
-                { id: 8, name: "9. 希望 · 恐惧" },
-                { id: 9, name: "10. 最终 · 综合结果" }
-            ]
-        }
+    // ========== 权杖牌组 14张（火元素）==========
+    { name: "权杖王牌", meaningUp: "新行动、创造、灵感、开始、能量", meaningDown: "延迟、受阻、缺乏动力、计划延误" },
+    { name: "权杖二", meaningUp: "计划、决定、探索、进步、选择", meaningDown: "恐惧未知、犹豫、停滞、计划受阻" },
+    { name: "权杖三", meaningUp: "展望、领导力、扩张、贸易、远见", meaningDown: "延误、合作问题、眼光短浅、障碍" },
+    { name: "权杖四", meaningUp: "庆祝、和谐、稳定、回家、完成", meaningDown: "动荡、冲突、不稳定、过渡期" },
+    { name: "权杖五", meaningUp: "冲突、竞争、分歧、挑战、争斗", meaningDown: "化解冲突、避免争斗、达成共识" },
+    { name: "权杖六", meaningUp: "胜利、认可、成功、进步、自信", meaningDown: "失败、骄傲、背叛、延迟、不确定性" },
+    { name: "权杖七", meaningUp: "坚持、防御、勇气、挑战、优势", meaningDown: "放弃、劣势、压力过大、精疲力竭" },
+    { name: "权杖八", meaningUp: "速度、行动、消息、迅速进展、旅行", meaningDown: "延误、停滞、失控、阻碍、急躁" },
+    { name: "权杖九", meaningUp: "韧性、边界、坚持、警戒、防守", meaningDown: "精疲力竭、疑心、放弃设限、软弱" },
+    { name: "权杖十", meaningUp: "负担、压力、责任、过度劳累、牺牲", meaningDown: "崩溃、卸下负担、逃避责任、无法承担" },
+    { name: "权杖侍从", meaningUp: "热情、探索、新消息、好奇心、活力", meaningDown: "优柔寡断、缺乏方向、幼稚、冲动" },
+    { name: "权杖骑士", meaningUp: "行动、冒险、冲动、激情、旅程", meaningDown: "鲁莽、急躁、分歧、中断、缺乏方向" },
+    { name: "权杖王后", meaningUp: "自信、活力、吸引力、独立、热情", meaningDown: "嫉妒、占有欲、情绪化、缺乏自信" },
+    { name: "权杖国王", meaningUp: "领导力、远见、成熟、热情、力量", meaningDown: "专制、急躁、苛刻、缺乏远见" },
+
+    // ========== 圣杯牌组 14张（水元素）==========
+    { name: "圣杯王牌", meaningUp: "新感情、直觉、丰盛、爱、喜悦", meaningDown: "感情受阻、空虚、失落、创意枯竭" },
+    { name: "圣杯二", meaningUp: "连接、吸引力、和谐、恋爱、友谊", meaningDown: "失衡、误解、分离、信任破裂" },
+    { name: "圣杯三", meaningUp: "庆祝、友谊、社区、聚会、团结", meaningDown: "过度放纵、八卦、孤独、三角关系" },
+    { name: "圣杯四", meaningUp: "冷漠、沉思、不满、无聊、机会", meaningDown: "觉醒、接受新机会、摆脱麻木" },
+    { name: "圣杯五", meaningUp: "失落、悲伤、悔恨、接受、放手", meaningDown: "向前看、走出悲伤、接受帮助" },
+    { name: "圣杯六", meaningUp: "回忆、怀旧、童年、温暖、给予", meaningDown: "困在过去、不成熟、执着、停滞" },
+    { name: "圣杯七", meaningUp: "幻想、选择、迷惑、幻觉、想象", meaningDown: "清醒、专注、决定、拒绝幻想" },
+    { name: "圣杯八", meaningUp: "离开、追寻、放手、前行、勇气", meaningDown: "困住、犹豫、返回、逃避改变" },
+    { name: "圣杯九", meaningUp: "满足、愿望成真、快乐、满足、骄傲", meaningDown: "贪婪、不满、炫耀、过度自信" },
+    { name: "圣杯十", meaningUp: "和谐、家庭、幸福、满足、圆满", meaningDown: "冲突、分裂、假象、家庭不和" },
+    { name: "圣杯侍从", meaningUp: "创意、直觉、新消息、敏感、童心", meaningDown: "情绪化、创意受阻、脆弱、自我怀疑" },
+    { name: "圣杯骑士", meaningUp: "浪漫、魅力、理想主义、邀请、优雅", meaningDown: "情绪化、幻想破灭、欺骗、逃避" },
+    { name: "圣杯王后", meaningUp: "直觉、同情、疗愈、敏感、温柔", meaningDown: "情绪勒索、过度敏感、依赖、控制" },
+    { name: "圣杯国王", meaningUp: "慈悲、掌控、外交、平衡、智慧", meaningDown: "压抑、情绪操控、冷漠、无能" },
+
+    // ========== 宝剑牌组 14张（风元素）==========
+    { name: "宝剑王牌", meaningUp: "突破、清晰、力量、真相、决心", meaningDown: "混乱、无力、残酷、被压倒、逃避" },
+    { name: "宝剑二", meaningUp: "僵局、逃避、拒绝面对、犹豫", meaningDown: "放下防卫、面对真相、选择" },
+    { name: "宝剑三", meaningUp: "心碎、悲伤、失落、背叛、痛苦", meaningDown: "治愈、宽恕、释放痛苦、恢复" },
+    { name: "宝剑四", meaningUp: "休息、恢复、静思、放松、充电", meaningDown: "精疲力竭、失眠、压力、过度工作" },
+    { name: "宝剑五", meaningUp: "冲突、失败、损失、不择手段、背叛", meaningDown: "和解、修复关系、放下骄傲" },
+    { name: "宝剑六", meaningUp: "过渡、放下过去、疗愈之旅、平静", meaningDown: "困住、无法前进、执念、拖延" },
+    { name: "宝剑七", meaningUp: "欺骗、策略、隐秘、智取、诡计", meaningDown: "被揭穿、诚实反省、自欺欺人" },
+    { name: "宝剑八", meaningUp: "限制、束缚、无助、受害者心态", meaningDown: "解放、看清真相、突破束缚" },
+    { name: "宝剑九", meaningUp: "焦虑、噩梦、担忧、内疚、绝望", meaningDown: "面对恐惧、寻求帮助、希望" },
+    { name: "宝剑十", meaningUp: "结束、毁灭、低谷、牺牲、背叛", meaningDown: "重生、摆脱低谷、曙光新生" },
+    { name: "宝剑侍从", meaningUp: "好奇心、警觉、新想法、观察、学习", meaningDown: "欺骗、狡猾、窥探、缺乏判断" },
+    { name: "宝剑骑士", meaningUp: "冲动、快速行动、直接、直言不讳", meaningDown: "鲁莽、破坏、急躁、冲突升级" },
+    { name: "宝剑王后", meaningUp: "独立、清晰、敏锐、公正、成熟", meaningDown: "冷酷、讽刺、刻薄、孤立、偏见" },
+    { name: "宝剑国王", meaningUp: "智慧、权威、理性、真相、领导", meaningDown: "专制、残忍、操纵、不合理判断" },
+
+    // ========== 星币牌组 14张（土元素）==========
+    { name: "星币王牌", meaningUp: "新财务、机会、繁荣、富足、务实", meaningDown: "损失、贪婪、错过机会、匮乏" },
+    { name: "星币二", meaningUp: "平衡、适应、多任务、灵活性、波动", meaningDown: "失衡、压力、失控、财务焦虑" },
+    { name: "星币三", meaningUp: "团队、合作、技能、工匠精神、初成", meaningDown: "挫败、无法合作、质量差、混乱" },
+    { name: "星币四", meaningUp: "控制、占有、保守、安全、节省", meaningDown: "贪婪、吝啬、失去控制、放手难" },
+    { name: "星币五", meaningUp: "匮乏、孤立、担忧、失业、无助", meaningDown: "恢复、重获希望、走出困境" },
+    { name: "星币六", meaningUp: "给予、接受、慷慨、互助、分配", meaningDown: "不平等、债务、自私、滥用支配" },
+    { name: "星币七", meaningUp: "评估、等待、收获、投资、反思", meaningDown: "焦虑、不耐烦、回报低、无果" },
+    { name: "星币八", meaningUp: "精进、技能、专注、细节、工匠", meaningDown: "敷衍、注意力分散、低质量" },
+    { name: "星币九", meaningUp: "自足、奢华、成就、独立、享受", meaningDown: "依赖、虚荣、过度保守、失败" },
+    { name: "星币十", meaningUp: "财富、传承、家族、稳定、圆满", meaningDown: "动荡、财务损失、家庭不和" },
+    { name: "星币侍从", meaningUp: "学习、新机会、专注、野心、务实", meaningDown: "拖延、幼稚、浪费机会、自大" },
+    { name: "星币骑士", meaningUp: "勤奋、可靠、耐心、责任、务实", meaningDown: "停滞、懒惰、固执、工作倦怠" },
+    { name: "星币王后", meaningUp: "务实、丰盛、养育、自然、慷慨", meaningDown: "财务焦虑、嫉妒、缺乏安全感" },
+    { name: "星币国王", meaningUp: "富足、成功、商业头脑、可靠", meaningDown: "贪婪、物质主义、控制、风险回避" }
+];
+// 牌阵配置
+const spreads = {
+    single: { name: "单张牌", positions: [{ id: 0, name: "今日指引 / 核心提示" }] },
+    three: { name: "三张牌（时间之箭）", positions: [
+        { id: 0, name: "过去 · 根源" }, { id: 1, name: "现在 · 当下" }, { id: 2, name: "未来 · 发展" }
+    ] },
+    celtic: { name: "凯尔特十字", positions: [
+        { id: 0, name: "1. 现状 · 核心问题" }, { id: 1, name: "2. 阻碍 · 挑战" },
+        { id: 2, name: "3. 潜意识 · 根基" }, { id: 3, name: "4. 过去 · 近期经历" },
+        { id: 4, name: "5. 可能的结果" }, { id: 5, name: "6. 未来 · 短期发展" },
+        { id: 6, name: "7. 态度 · 自我定位" }, { id: 7, name: "8. 环境 · 他人影响" },
+        { id: 8, name: "9. 希望 · 恐惧" }, { id: 9, name: "10. 最终 · 综合结果" }
+    ] }
+};
+
+let currentSpread = "single";
+const spreadBtns = document.querySelectorAll('.spread-btn');
+const drawBtn = document.getElementById('drawBtn');
+const resultArea = document.getElementById('resultArea');
+const resetBtn = document.getElementById('resetBtn');
+
+// 深拷贝一副牌堆（用于不放回抽取）
+function createDeck() {
+    return tarots.map(card => ({ ...card }));
+}
+
+// 从牌堆中抽一张（不放回）
+function drawCardFromDeck(deck) {
+    if (deck.length === 0) throw new Error("牌堆已空");
+    const idx = Math.floor(Math.random() * deck.length);
+    const card = deck[idx];
+    deck.splice(idx, 1);
+    const isReversed = Math.random() < 0.5;
+    return {
+        name: card.name,
+        orientation: isReversed ? "逆位 ⚡" : "正位 🌟",
+        meaning: isReversed ? card.meaningDown : card.meaningUp
     };
+}
 
-    let currentSpread = "single";   // 当前选中的牌阵
-    let currentReading = [];         // 存储当前牌阵的抽牌结果
-
-    // DOM 元素
-    const spreadBtns = document.querySelectorAll('.spread-btn');
-    const drawBtn = document.getElementById('drawBtn');
-    const resultArea = document.getElementById('resultArea');
-    const resetBtn = document.getElementById('resetBtn');
-
-    // 抽一张牌（含正逆位）
-    function drawRandomCard() {
-        const randomIndex = Math.floor(Math.random() * tarots.length);
-        const card = tarots[randomIndex];
-        const isReversed = Math.random() < 0.5;
-        const orientation = isReversed ? "逆位 ⚡" : "正位 🌟";
-        const meaning = isReversed ? card.meaningDown : card.meaningUp;
-        return { name: card.name, orientation, meaning };
+// 执行不放回抽牌阵
+function drawSpread(spreadType) {
+    const positions = spreads[spreadType].positions;
+    const deck = createDeck();
+    if (deck.length < positions.length) {
+        console.error("牌堆不足");
+        return [];
     }
-
-    // 根据牌阵，抽取一组牌
-    function drawSpread(spreadType) {
-        const positions = spreads[spreadType].positions;
-        const results = [];
-        for (let i = 0; i < positions.length; i++) {
-            const cardResult = drawRandomCard();
-            results.push({
-                positionName: positions[i].name,
-                card: cardResult
-            });
-        }
-        return results;
+    const results = [];
+    for (let i = 0; i < positions.length; i++) {
+        const cardResult = drawCardFromDeck(deck);
+        results.push({ positionName: positions[i].name, card: cardResult });
     }
+    return results;
+}
 
-    // 渲染牌阵结果
-    function renderSpread(results) {
-        let html = `<div class="spread-result">`;
-        for (let res of results) {
-            html += `
-                <div class="card-result">
-                    <div class="position-name">${res.positionName}</div>
-                    <div class="card-name">📌 ${res.card.name}</div>
-                    <div class="orientation">${res.card.orientation}</div>
-                    <div class="meaning">💬 ${res.card.meaning}</div>
-                </div>
-            `;
-        }
-        html += `</div>`;
-        resultArea.innerHTML = html;
-    }
-
-    // 清空结果，显示初始提示
-    function resetDisplay() {
-        resultArea.innerHTML = `
-            <div style="background:#fef7e8; border-radius:48px; padding:40px 20px; text-align:center; color:#4b2a1a;">
-                <h3>🔮 选择牌阵，开始占卜</h3>
-                <p>单张牌：快速指引<br>三张牌：解读过去/现在/未来<br>凯尔特十字：深度全面分析</p>
+function renderSpread(results) {
+    let html = `<div class="spread-result">`;
+    for (let res of results) {
+        html += `
+            <div class="card-result">
+                <div class="position-name">${res.positionName}</div>
+                <div class="card-name">📌 ${res.card.name}</div>
+                <div class="orientation">${res.card.orientation}</div>
+                <div class="meaning">💬 ${res.card.meaning}</div>
             </div>
         `;
-        currentReading = [];
     }
+    html += `</div>`;
+    resultArea.innerHTML = html;
+}
 
-    // 执行占卜主流程
-    function performReading() {
-        const results = drawSpread(currentSpread);
-        currentReading = results;
-        renderSpread(results);
-    }
+function resetDisplay() {
+    resultArea.innerHTML = `<div style="background:#fef7e8; border-radius:48px; padding:40px 20px; text-align:center;">
+        <h3>🔮 选择牌阵，开始占卜</h3><p>单张牌快速指引 · 三张牌解读过去现在未来 · 凯尔特十字深度分析</p>
+    </div>`;
+}
 
-    // 牌阵切换逻辑
-    function setActiveSpread(spreadType) {
-        currentSpread = spreadType;
-        spreadBtns.forEach(btn => {
-            if (btn.dataset.spread === spreadType) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
-        resetDisplay(); // 切换牌阵后，清空旧结果
-    }
+function performReading() {
+    const results = drawSpread(currentSpread);
+    renderSpread(results);
+}
 
-    // 事件绑定
+function setActiveSpread(spreadType) {
+    currentSpread = spreadType;
     spreadBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const spreadType = btn.dataset.spread;
-            setActiveSpread(spreadType);
-        });
+        btn.classList.toggle('active', btn.dataset.spread === spreadType);
     });
+    resetDisplay();
+}
 
-    drawBtn.addEventListener('click', () => {
-        performReading();
-    });
-
-    resetBtn.addEventListener('click', () => {
-        resetDisplay();
-    });
-
-    // 初始化：默认选中单张牌，清空结果
-    setActiveSpread('single');
+spreadBtns.forEach(btn => btn.addEventListener('click', () => setActiveSpread(btn.dataset.spread)));
+drawBtn.addEventListener('click', performReading);
+resetBtn.addEventListener('click', resetDisplay);
+setActiveSpread('single');
 </script>
 </body>
 </html>
