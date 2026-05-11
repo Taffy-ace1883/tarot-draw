@@ -300,11 +300,20 @@ function drawSpread(spreadType) {
 }
 
 function renderSpread(results) {
+    console.log("renderSpread 被调用，结果数量:", results.length);
     let html = `<div class="spread-result">`;
-    for (let res of results) {
+    for (let i = 0; i < results.length; i++) {
+        const res = results[i];
+        // 构造完整的图片 URL（确保路径正确）
+        const imgUrl = "https://taffy-ace1883.github.io/tarot-draw/" + res.card.img;
+        console.log(`第${i+1}张牌:`, res.card.name, "图片地址:", imgUrl);
+        
         html += `
             <div class="card-result">
                 <div class="position-name">${res.positionName}</div>
+                <div class="card-image">
+                    <img src="${imgUrl}" alt="${res.card.name}" style="width:150px; border-radius:16px; margin:10px auto; display:block;" onerror="console.error('图片加载失败:', this.src);">
+                </div>
                 <div class="card-name">📌 ${res.card.name}</div>
                 <div class="orientation">${res.card.orientation}</div>
                 <div class="meaning">💬 ${res.card.meaning}</div>
@@ -313,9 +322,8 @@ function renderSpread(results) {
     }
     html += `</div>`;
     resultArea.innerHTML = html;
-}
-
-function resetDisplay() {
+    console.log("渲染完成，共", results.length, "张牌");
+}function resetDisplay() {
     resultArea.innerHTML = `<div style="background:#fef7e8; border-radius:48px; padding:40px 20px; text-align:center;">
         <h3>🔮 选择牌阵，开始占卜</h3><p>单张牌快速指引 · 三张牌解读过去现在未来 · 凯尔特十字深度分析</p>
     </div>`;
