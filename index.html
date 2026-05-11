@@ -302,9 +302,15 @@ function drawSpread(spreadType) {
 function renderSpread(results) {
     let html = `<div class="spread-result">`;
     for (let res of results) {
+        // 构造图片的完整URL（确保路径正确）
+        const imgUrl = res.card.img;
+        
         html += `
             <div class="card-result">
                 <div class="position-name">${res.positionName}</div>
+                <div class="card-image">
+                    <img src="${imgUrl}" alt="${res.card.name}" style="width:100%; max-width:180px; border-radius:16px; margin:10px 0;" onerror="console.error('图片加载失败:', this.src); this.style.display='none';">
+                </div>
                 <div class="card-name">📌 ${res.card.name}</div>
                 <div class="orientation">${res.card.orientation}</div>
                 <div class="meaning">💬 ${res.card.meaning}</div>
@@ -314,7 +320,6 @@ function renderSpread(results) {
     html += `</div>`;
     resultArea.innerHTML = html;
 }
-
 function resetDisplay() {
     resultArea.innerHTML = `<div style="background:#fef7e8; border-radius:48px; padding:40px 20px; text-align:center;">
         <h3>🔮 选择牌阵，开始占卜</h3><p>单张牌快速指引 · 三张牌解读过去现在未来 · 凯尔特十字深度分析</p>
