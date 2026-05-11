@@ -162,7 +162,7 @@
 
 <script>
 // 图片基础路径 - 使用 raw.githubusercontent.com 获取真实图片
-const IMG_BASE = "https://raw.githubusercontent.com/Taffy-ace1883/tarot-draw/不同牌阵/tarot-image/";
+const IMG_BASE = "https://raw.githubusercontent.com/Taffy-ace1883/tarot-draw/main/tarot-image/";
 
 // 完整78张塔罗牌数据
 const tarots = [
@@ -310,8 +310,8 @@ function drawSpread(spreadType) {
 
 // 渲染结果
 function renderSpread(results) {
-    console.log("renderSpread 被调用，结果数量:", results.length);
     let html = `<div class="spread-result">`;
+<<<<<<< HEAD
 <<<<<<< HEAD
     for (const res of results) {
         const imgUrl = IMG_BASE + res.card.img;
@@ -323,16 +323,25 @@ function renderSpread(results) {
         console.log(`第${i+1}张牌:`, res.card.name, "图片地址:", imgUrl);
         
 >>>>>>> f776bb6e4b37582ac49fe6d1c1991cb5b694b3f6
+=======
+    for (const res of results) {
+        const imgUrl = IMG_BASE + res.card.img;
+>>>>>>> 06901b308b406ccce6757747f0274799fc192d7b
         html += `
             <div class="card-result">
                 <div class="position-name">${res.positionName}</div>
                 <div class="card-image">
+<<<<<<< HEAD
 <<<<<<< HEAD
                     <img src="${imgUrl}" alt="${res.card.name}" style="width:150px; border-radius:16px; margin:10px auto; display:block;" 
                          onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'padding:20px;font-size:60px;text-align:center;\\'>🃟</div>'">
 =======
                     <img src="${imgUrl}" alt="${res.card.name}" style="width:150px; border-radius:16px; margin:10px auto; display:block;" onerror="console.error('图片加载失败:', this.src);">
 >>>>>>> f776bb6e4b37582ac49fe6d1c1991cb5b694b3f6
+=======
+                    <img src="${imgUrl}" alt="${res.card.name}" style="width:150px; border-radius:16px; margin:10px auto; display:block;" 
+                         onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'padding:20px;font-size:60px;text-align:center;\\'>🃟</div>'">
+>>>>>>> 06901b308b406ccce6757747f0274799fc192d7b
                 </div>
                 <div class="card-name">📌 ${res.card.name}</div>
                 <div class="orientation">${res.card.orientation}</div>
@@ -342,8 +351,9 @@ function renderSpread(results) {
     }
     html += `</div>`;
     resultArea.innerHTML = html;
-    console.log("渲染完成，共", results.length, "张牌");
-}function resetDisplay() {
+}
+
+function resetDisplay() {
     resultArea.innerHTML = `<div style="background:#fef7e8; border-radius:48px; padding:40px 20px; text-align:center;">
         <h3>🔮 选择牌阵，开始占卜</h3><p>单张牌快速指引 · 三张牌解读过去现在未来 · 凯尔特十字深度分析</p>
     </div>`;
