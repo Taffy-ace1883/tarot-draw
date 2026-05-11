@@ -162,7 +162,7 @@
 
 <script>
 // 图片基础路径 - 使用 raw.githubusercontent.com 获取真实图片
-const IMG_BASE = "https://raw.githubusercontent.com/Taffy-ace1883/tarot-draw/main/tarot-image/";
+const IMG_BASE = "https://cdn.jsdelivr.net/gh/Taffy-ace1883/tarot-draw/tarot-image/";
 
 // 完整78张塔罗牌数据
 const tarots = [
@@ -281,7 +281,7 @@ function createDeck() {
     return tarots.map(card => ({ ...card }));
 }
 
-// 抽一张牌（修复：保留img字段）
+// 抽一张牌
 function drawCardFromDeck(deck) {
     if (deck.length === 0) throw new Error("牌堆已空");
     const idx = Math.floor(Math.random() * deck.length);
@@ -308,40 +308,17 @@ function drawSpread(spreadType) {
     return results;
 }
 
-// 渲染结果
+// 渲染结果 - 清理后的干净版本
 function renderSpread(results) {
     let html = `<div class="spread-result">`;
-<<<<<<< HEAD
-<<<<<<< HEAD
     for (const res of results) {
         const imgUrl = IMG_BASE + res.card.img;
-=======
-    for (let i = 0; i < results.length; i++) {
-        const res = results[i];
-        // 构造完整的图片 URL（确保路径正确）
-        const imgUrl = "https://taffy-ace1883.github.io/tarot-draw/" + res.card.img;
-        console.log(`第${i+1}张牌:`, res.card.name, "图片地址:", imgUrl);
-        
->>>>>>> f776bb6e4b37582ac49fe6d1c1991cb5b694b3f6
-=======
-    for (const res of results) {
-        const imgUrl = IMG_BASE + res.card.img;
->>>>>>> 06901b308b406ccce6757747f0274799fc192d7b
         html += `
             <div class="card-result">
                 <div class="position-name">${res.positionName}</div>
                 <div class="card-image">
-<<<<<<< HEAD
-<<<<<<< HEAD
                     <img src="${imgUrl}" alt="${res.card.name}" style="width:150px; border-radius:16px; margin:10px auto; display:block;" 
                          onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'padding:20px;font-size:60px;text-align:center;\\'>🃟</div>'">
-=======
-                    <img src="${imgUrl}" alt="${res.card.name}" style="width:150px; border-radius:16px; margin:10px auto; display:block;" onerror="console.error('图片加载失败:', this.src);">
->>>>>>> f776bb6e4b37582ac49fe6d1c1991cb5b694b3f6
-=======
-                    <img src="${imgUrl}" alt="${res.card.name}" style="width:150px; border-radius:16px; margin:10px auto; display:block;" 
-                         onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\\'padding:20px;font-size:60px;text-align:center;\\'>🃟</div>'">
->>>>>>> 06901b308b406ccce6757747f0274799fc192d7b
                 </div>
                 <div class="card-name">📌 ${res.card.name}</div>
                 <div class="orientation">${res.card.orientation}</div>
